@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stocks-overview"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["DSNJTurtle <sebastian.t.kirchner@gmail.com>"]
 readme = "README.md"
