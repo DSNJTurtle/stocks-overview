@@ -5,6 +5,7 @@ description = ""
 authors = ["DSNJTurtle <sebastian.t.kirchner@gmail.com>"]
 readme = "README.md"
 packages = [{include = "stocks_overview", from = "src"}]
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -19,6 +20,30 @@ isort = "^5.13.2"
 pre-commit = "^3.6.0"
 commitizen = "^3.13.0"
 pytest = "^7.4.3"
+
+[tool.black]
+line-length = 120
+force-exclude = """
+(
+    | ^/3 # exclude folder oncreated by GitHub actions
+)
+"""
+
+[tool.isort]
+profile = "black"
+skip = [".gitignore", "3"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "semver"
+version_provider = "poetry"
+update_changelog_on_bump = true
+
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib"]
+log_cli = true
+log_cli_level = "INFO"
 
 [build-system]
 requires = ["poetry-core"]
