@@ -4,37 +4,47 @@ version = "1.1.0"
 description = ""
 authors = ["DSNJTurtle <sebastian.t.kirchner@gmail.com>"]
 readme = "README.md"
-packages = [{include = "stocks_overview", from = "src"}]
+packages = [{ include = "stocks_overview", from = "src" }]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.11"
+python = "^3.12"
 pandas = ">=2.1.0"
-typer = {extras = ["all"], version = ">=0.9.0"}
+typer = ">=0.9.0"
 pandas-stubs = "^2.1.4.231227"
 pyfiglet = ">=1.0.0"
 tomlkit = ">=0.12.0"
 pendulum = ">=3.0.0"
 
-
 [tool.poetry.group.dev.dependencies]
-black = "^23.12.1"
-isort = "^5.13.2"
 pre-commit = "^3.6.0"
 commitizen = "^3.13.0"
 pytest = "^7.4.3"
+ruff = ">=0.3.0"
+pytype = ">=2024.2.27"
 
-[tool.black]
+[tool.pytype]
+inputs = ['src']
+jobs = 'auto'
+
+[tool.ruff]
 line-length = 120
-force-exclude = """
-(
-    | ^/3 # exclude folder oncreated by GitHub actions
-)
-"""
+src = ["src", "tests"]
+preview = true
 
-[tool.isort]
-profile = "black"
-skip = [".gitignore", "3"]
+[tool.ruff.lint]
+select = ["E3", "E4", "E7", "E9", "F", "D"]
+extend-select = ["B", "A", "SIM", "I", "D204", "D209", "D213", "D410", "D413", "W293", "W505", "PD", "NPY"]
+extend-ignore = ["D212", "D100", "D102", "D104", "D105", "D107", "PD008", "PD901", "PD010", "PD101"]
+extend-fixable = ["D", "W505", "W293"]
+preview = true
+
+[tool.ruff.format]
+preview = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
 
 [tool.commitizen]
 name = "cz_conventional_commits"

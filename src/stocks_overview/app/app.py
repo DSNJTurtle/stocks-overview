@@ -79,6 +79,16 @@ def sell_stocks() -> None:
 
 
 def existing_stocks(_so: StockOverview) -> Tuple[Dict, Table]:
+    """
+    List exinsting stocks.
+
+    Args:
+        _so: StockOverview object
+
+    Returns:
+        Dict and table of availablke stocks.
+
+    """
     table = Table("No.", "WKN", "Name")
     d = {}
     for i, e in enumerate(_so.stocks_df[["wkn", "name"]].drop_duplicates().sort_values(["wkn"]).to_numpy()):
@@ -90,7 +100,7 @@ def existing_stocks(_so: StockOverview) -> Tuple[Dict, Table]:
 
 def init() -> StockOverview:
     """
-    Initialise new setup
+    Initialise new setup.
 
     Returns: StocksOverview object
     """

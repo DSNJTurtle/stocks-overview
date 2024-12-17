@@ -1,4 +1,5 @@
-"""Library"""
+"""Library."""
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
@@ -13,6 +14,8 @@ import tomlkit.toml_file
 
 @dataclass
 class StocksDf:
+    """Stock container."""
+
     wkn: str
     name: str
     qty: int
@@ -21,6 +24,8 @@ class StocksDf:
 
 
 class StockOverview:
+    """Stock overview class."""
+
     def __init__(self, config_path: str, stocks_file: str):
         self.config_path: str = config_path
         self.stocks_file: str = stocks_file
@@ -69,7 +74,7 @@ class StockOverview:
 
         """
         assert self.stocks_df is not None
-        self.stocks_df.fillna(value=np.nan, inplace=True)
+        self.stocks_df = self.stocks_df.fillna(value=np.nan)
         self.stocks_df.to_csv(self.stocks_file, header=True, index=False, na_rep="null")
 
     def is_wkn_known(self, wkn: str) -> bool:
@@ -116,7 +121,7 @@ class StockOverview:
             return
 
         df = self.stocks_df
-        mask = ((df["buy_date"] >= min_date) & (df["sell_date"].notnull())) | (df["sell_date"].isnull())
+        mask = ((df["buy_date"] >= min_date) & (df["sell_date"].notna())) | (df["sell_date"].isna())
         df = df[mask].sort_values(["buy_date"])
         print(df)
 
@@ -136,7 +141,7 @@ class StockOverview:
         assert self.stocks_df is not None
         df = pd.DataFrame.from_records([asdict(StocksDf(wkn, name, qty, buy_date))])
         self.stocks_df = df if self.stocks_df.empty else pd.concat([self.stocks_df, df])
-        self.stocks_df.reset_index(drop=True, inplace=True)
+        self.stocks_df = self.stocks_df.reset_index(drop=True)
         self.write_stocks_df()
         print("Successfully added")
 
@@ -160,7 +165,7 @@ class StockOverview:
             if remaining_stocks_to_sell <= 0:
                 updates.append(row)
             else:
-                n = getattr(row, "qty")
+                n = row.qty
                 new_n = n - remaining_stocks_to_sell
                 if new_n <= 1e-4:
                     updates.append(row._replace(sell_date=sell_date))
@@ -198,18 +203,10 @@ class StockOverview:
 
 
 def today_date() -> str:
-    """
-
-    Returns: Get today's date as string.
-
-    """
+    """Returns: Get today's date as string."""
     return pendulum.now().date().to_date_string()
 
 
 def start_of_year() -> str:
-    """
-
-    Returns: Get beginning of year as date string, e.g. 2024-01-01
-
-    """
+    """Returns: Get beginning of year as date string, e.g. 2024-01-01."""
     return pendulum.date(pendulum.now().year, 1, 1).to_date_string()
